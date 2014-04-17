@@ -1,4 +1,5 @@
 require 'emojidex/converters'
+require 'emojidex/collection'
 
 module Emojidex
   # Converter utility for emojidex
