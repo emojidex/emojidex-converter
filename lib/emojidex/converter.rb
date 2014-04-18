@@ -1,11 +1,13 @@
-require 'emojidex/converters'
-require 'emojidex/collection'
+# require 'emojidex/converters'
+# require 'emojidex/collection'
+require_relative 'converters'
+require_relative 'collection'
 
 module Emojidex
   # Converter utility for emojidex
   class Converter
     @@size_types = { ldpi: 9, mdpi: 18, hdpi: 27, xhdpi: 36, px8: 8,
-                   px16: 16, px32: 32, px64: 64, px128: 128, px256: 256 }
+                     px16: 16, px32: 32, px64: 64, px128: 128, px256: 256 }
     @@format_types = { svg: Emojidex::Converters::SVG, png: Emojidex::Converters::PNG }
 
     def self.size_types

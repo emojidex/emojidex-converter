@@ -1,4 +1,4 @@
-require 'FileMagic'
+require 'filemagic'
 require 'rsvg2'
 
 module Emojidex::Converters
