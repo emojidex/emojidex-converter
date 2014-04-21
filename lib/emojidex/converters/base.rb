@@ -14,25 +14,10 @@ module Emojidex::Converters
       end
     end
 
-    private
-
-    def svg_to_surface(source, size)
-      handle = RSVG::Handle.new_from_file(source)
-
-      dim = handle.dimensions
-      ratio_w = size.to_f / dim.width.to_f
-      ratio_h = size.to_f / dim.height.to_f
-
-      surface = Cairo::ImageSurface.new(:argb32, size, size)
-      context = Cairo::Context.new(surface)
-      context.scale(ratio_w, ratio_h)
-      context.render_rsvg_handle(handle)
-      context.destroy
-
-      surface
-    end
-
-    def png_to_surface(source, size)
+    def write_surface(surface, destination, formats)
+      # surface_to_svg(surface, destination) if formats.key?('svg')
+      surface_to_png(surface, destination) if formats.key?('png')
+      surface.destroy
     end
   end
 end

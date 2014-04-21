@@ -20,12 +20,27 @@ module Emojidex
 
     attr_accessor :sizes, :formats, :location
     def initialize(override = {})
-      @sizes = override[:sizes] || @@size_types
+      # @sizes = override[:sizes] || @@size_types
+      if override[:sizes].nil?
+        @sizes = @@size_types
+      else
+        @sizes = {}
+        sizes = override[:sizes]
+        sizes.each { |value| @sizes[value] = @@size_types[value] }
+      end
+
       @formats = override[:formats] || @@format_types
       @path = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
     end
 
-    def convert(emoji)
+    def convert(emoji, source_dir)
+      if File.directory?("#{source_dir}/#{emoji.code}")
+        png = Emojidex::Converters::PNG.new
+        png.convert_to_apng(emoji.code, @sizes, source_dir)
+      else
+        svg = Emojidex::Converters::SVG.new
+        svg.convert_to_png(emoji.code, @sizes, source_dir)
+      end
     end
   end
 end
