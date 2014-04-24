@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'emojidex/converter'
 
 describe Emojidex::Converter do
   let(:converter) do
@@ -17,5 +16,11 @@ describe Emojidex::Converter do
       expect(converter.sizes).to be_an_instance_of(Hash)
       expect(converter.sizes.size).to be >= 10
     end
+
+    it 'overrides sizes when passed in initialization' do
+      conv = Emojidex::Converter.new(sizes: { px200: 200, px1024: 1024, way_too_big: 20000000 })
+      expect(conv.sizes).to eq({ px200: 200, px1024: 1024, way_too_big: 20000000 })
+    end
+
   end
 end
