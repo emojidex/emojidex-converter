@@ -1,6 +1,7 @@
 require 'phantom_svg'
 
 module Emojidex::Converters
+  # convert svg files into a svg animation file
   class SVGAnimation < Emojidex::Converters::Base
     def initialize
     end
@@ -8,11 +9,9 @@ module Emojidex::Converters
     def convert_to_animation(path)
       root_dir = delete_slash(path)
 
-      Dir::entries(root_dir).each do |file|
-        if File::ftype("#{root_dir}/#{file}") == "directory"
-          if file != '.' && file != '..'
-            convert("#{root_dir}/#{file}") 
-          end
+      Dir.entries(root_dir).each do |file|
+        if File.ftype("#{root_dir}/#{file}") == 'directory'
+          convert("#{root_dir}/#{file}") if file != '.' && file != '..'
         end
       end
     end
@@ -21,8 +20,8 @@ module Emojidex::Converters
 
     def convert(source_dir)
       filename = set_filename(source_dir)
-      
-      Dir::entries(source_dir).each do |file|
+
+      Dir.entries(source_dir).each do |file|
         if file == 'animation.json'
           svg = Phantom::SVG::Base.new
           svg.add_frame_from_file("#{source_dir}/#{file}")
@@ -39,10 +38,7 @@ module Emojidex::Converters
     end
 
     def delete_slash(str)
-      if str.rindex('/') == str.length - 1
-        str = str[0, str.length - 1]
-      end
-
+      str = str[0, str.length - 1] if str.rindex('/') == str.length - 1
       str
     end
   end
