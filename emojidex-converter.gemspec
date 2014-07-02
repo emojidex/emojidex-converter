@@ -3,7 +3,9 @@ Gem::Specification.new do |s|
   s.version       = '0.0.1'
   s.license       = 'Equivilent to emojidex-toolkit'
   s.summary       = 'Image conversion modules for emojidex'
-  s.description   = 'Adds the convert method to Emojidex::Collection and Emojidex::Emoji, which allows you to convert an emoji collection or a single emoji to the specified image format.'
+  s.description   = 'Adds the convert method to Emojidex::Collection and Emojidex::Emoji, which\
+                    allows you to convert an emoji collection or a single emoji to the specified\
+                    image format.'
   s.authors       = ['Rei Kagetsuki', 'Rika Yoshida']
   s.email         = ['zero@genshin.org', 'nazuki@genshin.org']
   s.files         = `git ls-files`.split("\n")
