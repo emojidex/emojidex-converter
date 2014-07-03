@@ -16,5 +16,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'nokogiri'
   s.add_dependency 'cairo'
   # s.add_dependency 'gdk3'
-  s.add_dependency 'emojidex-toolkit'
+  s.add_dependency 'emojidex'
 end
