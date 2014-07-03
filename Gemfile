@@ -9,6 +9,7 @@ group :development do
   gem 'guard-rspec'
   gem 'rubocop'
   gem 'guard-rubocop'
+  gem 'phantom_svg', github: 'Genshin/phantom_svg', branch: 'rspec'
 end
 
 group :test do
