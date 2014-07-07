@@ -1,4 +1,5 @@
 module Emojidex
+  # Manages a collection of emoji. + conversion
   class Collection
     def convert(options = {})
       converter = Emojidex::Converter.new(options)

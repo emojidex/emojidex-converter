@@ -1,4 +1,5 @@
 module Emojidex::Converters
+  # SVG handling for emojidex converters
   class SVG < Emojidex::Converters::Base
     def svg_to_surface(source, size)
       handle = RSVG::Handle.new_from_file(source)
