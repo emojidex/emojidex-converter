@@ -31,5 +31,10 @@ module Emojidex
         svg.convert_to_png(emoji.code, @sizes, source_dir)
       end
     end
+
+    def preprocess(source_dir)
+      preprocessor = Emojidex::Converters::Preprocessor.new
+      preprocessor.compile_svg_animations(source_dir)
+    end
   end
 end
