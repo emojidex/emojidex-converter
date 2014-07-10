@@ -1,5 +1,6 @@
 # require 'emojidex/converters'
 # require 'emojidex/collection'
+require 'phantom_svg'
 require_relative 'converters'
 require_relative 'collection'
 
@@ -22,13 +23,15 @@ module Emojidex
       @path = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
     end
 
-    def convert(emoji, source_dir)
-      if File.directory?("#{source_dir}/#{emoji.code}")
-        png = Emojidex::Converters::PNG.new
-        png.convert_to_apng(emoji.code, @sizes, source_dir)
-      else
-        svg = Emojidex::Converters::SVG.new
-        svg.convert_to_png(emoji.code, @sizes, source_dir)
+    def convert(emojis, source_dir)
+      emojis.each do |emoji|
+        phantom_svg = Phantom::SVG::Base.new("#{source_dir}/#{emoji.code}.svg")
+        @sizes.each do |key, val|
+          out_dir = "#{@path}/#{key}"
+          FileUtils.mkdir_p(out_dir)
+          phantom_svg.width = phantom_svg.height = val.to_i
+          phantom_svg.save_apng("#{out_dir}/#{emoji.code}.png")
+        end
       end
     end
 

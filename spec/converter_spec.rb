@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe Emojidex::Converter do
   let(:converter) do
-    Emojidex::Converter.new(destination: './tmp/out')
+    destination = './tmp/out'
+    FileUtils.remove_entry_secure(destination, true)
+    Emojidex::Converter.new(destination: destination)
   end
 
   describe '.new' do
@@ -33,9 +35,9 @@ describe Emojidex::Converter do
 
   describe '.convert' do
     it 'converts base SVG from the source directory to PNG in the destination directory' do
-      # setup_working_collection
-      # converter.preprocess("#{@support_dir}/tmp/collection")
-      # converter.convert([Emojidex::Emoji.new(code: 'kiss')], "#{@support_dir}/tmp/collection")
+      setup_working_collection
+      converter.preprocess("#{@support_dir}/tmp/collection")
+      converter.convert([Emojidex::Emoji.new(code: 'kiss')], "#{@support_dir}/tmp/collection")
     end
   end
 end
