@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Emojidex::Converter do
   let(:converter) do
-    Emojidex::Converter.new(path: './tmp/out')
+    Emojidex::Converter.new(destination: './tmp/out')
   end
 
   describe '.new' do
