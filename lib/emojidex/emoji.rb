@@ -6,8 +6,5 @@ module Emojidex
     def initialize(override = {})
       @code = override[:code].nil? ? '' : override[:code]
     end
-
-    def convert(format, size)
-    end
   end
 end
