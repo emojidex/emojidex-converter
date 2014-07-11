@@ -12,14 +12,9 @@ module Emojidex
         px16: 16, px32: 32, px64: 64, px128: 128, px256: 256 }
     end
 
-    def self.default_formats
-      { svg: Emojidex::Converters::SVG, png: Emojidex::Converters::PNG }
-    end
-
     attr_accessor :sizes, :formats, :location
     def initialize(override = {})
       @sizes = override[:sizes] || Converter.default_sizes
-      @formats = override[:formats] || Converter.default_formats
       @path = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
     end
 
