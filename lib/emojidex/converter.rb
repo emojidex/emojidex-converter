@@ -27,9 +27,14 @@ module Emojidex
       emojis.each do |emoji|
         phantom_svg = Phantom::SVG::Base.new("#{source_dir}/#{emoji.code}.svg")
         @sizes.each do |key, val|
+          # Create out directory.
           out_dir = "#{@path}/#{key}"
           FileUtils.mkdir_p(out_dir)
+
+          # Set size.
           phantom_svg.width = phantom_svg.height = val.to_i
+
+          # Output png.
           phantom_svg.save_apng("#{out_dir}/#{emoji.code}.png")
         end
       end
