@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe Emojidex::Converter do
   let(:converter) do
-    Emojidex::Converter.new(path: './tmp/out')
+    @destination = './tmp/out'
+    FileUtils.remove_entry_secure(@destination, true)
+    Emojidex::Converter.new(destination: @destination)
   end
 
   describe '.new' do
@@ -33,9 +35,20 @@ describe Emojidex::Converter do
 
   describe '.convert' do
     it 'converts base SVG from the source directory to PNG in the destination directory' do
-      # setup_working_collection
-      # converter.preprocess("#{@support_dir}/tmp/collection")
-      # converter.convert([Emojidex::Emoji.new(code: 'kiss')], "#{@support_dir}/tmp/collection")
+      setup_working_collection
+      converter.preprocess("#{@support_dir}/tmp/collection")
+      converter.convert([Emojidex::Emoji.new(code: 'kiss')], "#{@support_dir}/tmp/collection")
+
+      expect(File.exist?("#{@destination}/ldpi/kiss.png")).to be_truthy
+      expect(File.exist?("#{@destination}/mdpi/kiss.png")).to be_truthy
+      expect(File.exist?("#{@destination}/hdpi/kiss.png")).to be_truthy
+      expect(File.exist?("#{@destination}/xhdpi/kiss.png")).to be_truthy
+      expect(File.exist?("#{@destination}/px8/kiss.png")).to be_truthy
+      expect(File.exist?("#{@destination}/px16/kiss.png")).to be_truthy
+      expect(File.exist?("#{@destination}/px32/kiss.png")).to be_truthy
+      expect(File.exist?("#{@destination}/px64/kiss.png")).to be_truthy
+      expect(File.exist?("#{@destination}/px128/kiss.png")).to be_truthy
+      expect(File.exist?("#{@destination}/px256/kiss.png")).to be_truthy
     end
   end
 end

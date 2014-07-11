@@ -1,35 +1,27 @@
 require 'phantom_svg'
 
-module Emojidex::Converters
-  # compile svg files in a svg animation file
-  class Preprocessor
-    def compile_svg_animations(path)
-      Dir.entries(path).each do |file|
-        if File.ftype("#{path}/#{file}") == 'directory'
-          compile("#{path}/#{file}") if file != '.' && file != '..'
-        end
-      end
-    end
-
-    private
-
-    def compile(source_dir)
-      filename = set_filename(source_dir)
-
-      Dir.entries(source_dir).each do |file|
-        if file == 'animation.json'
-          svg = Phantom::SVG::Base.new
-          svg.add_frame_from_file("#{source_dir}/#{file}")
-          svg.save_svg("#{filename}.svg")
+module Emojidex
+  module Converters
+    # compile svg files in a svg animation file
+    class Preprocessor
+      def compile_svg_animations(path)
+        Dir.entries(path).each do |file|
+          current_path = "#{path}/#{file}"
+          next unless File.ftype(current_path) == 'directory'
+          compile(current_path) unless file.start_with?('.')
         end
       end
 
-      FileUtils.move("#{filename}.svg", File.dirname(source_dir))
-    end
+      private
 
-    def set_filename(source_dir)
-      start_index = source_dir.rindex('/')
-      source_dir[start_index + 1..source_dir.length - 1]
+      def compile(source_dir)
+        json_path = "#{source_dir}/animation.json"
+
+        return unless File.exist?(json_path)
+
+        phantom_svg = Phantom::SVG::Base.new(json_path)
+        phantom_svg.save_svg("#{File.dirname(source_dir)}/#{File.basename(source_dir)}.svg")
+      end
     end
   end
 end

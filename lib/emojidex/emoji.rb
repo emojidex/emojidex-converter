@@ -1,7 +1,10 @@
 module Emojidex
   # emoji base class, with conversion functionality
   class Emoji
-    def convert(format, size)
+    attr_reader :code
+
+    def initialize(override = {})
+      @code = override[:code].nil? ? '' : override[:code]
     end
   end
 end
