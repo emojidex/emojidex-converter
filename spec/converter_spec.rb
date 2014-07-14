@@ -33,11 +33,11 @@ describe Emojidex::Converter do
     end
   end
 
-  describe '.convert' do
+  describe '.rasterize' do
     it 'converts base SVG from the source directory to PNG in the destination directory' do
       setup_working_collection
       converter.preprocess("#{@support_dir}/tmp/collection")
-      converter.convert([Emojidex::Emoji.new(code: 'kiss')], "#{@support_dir}/tmp/collection")
+      converter.rasterize([Emojidex::Emoji.new(code: 'kiss')], "#{@support_dir}/tmp/collection")
 
       expect(File.exist?("#{@destination}/ldpi/kiss.png")).to be_truthy
       expect(File.exist?("#{@destination}/mdpi/kiss.png")).to be_truthy

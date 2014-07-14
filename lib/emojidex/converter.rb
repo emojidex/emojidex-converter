@@ -18,9 +18,9 @@ module Emojidex
       @path = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
     end
 
-    def convert(emojis, source_dir)
-      emojis.each do |emoji|
-        phantom_svg = Phantom::SVG::Base.new("#{source_dir}/#{emoji.code}.svg")
+    def rasterize(emoji, source_dir)
+      emoji.each do |moji|
+        phantom_svg = Phantom::SVG::Base.new("#{source_dir}/#{moji.code}.svg")
         @sizes.each do |key, val|
           # Create out directory.
           out_dir = "#{@path}/#{key}"
@@ -30,7 +30,7 @@ module Emojidex
           phantom_svg.width = phantom_svg.height = val.to_i
 
           # Output png.
-          phantom_svg.save_apng("#{out_dir}/#{emoji.code}.png")
+          phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
         end
       end
     end

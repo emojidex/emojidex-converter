@@ -8,4 +8,6 @@ def setup_working_collection
   FileUtils.rmdir("#{@support_dir}/tmp/collection")
   FileUtils.mkdir_p("#{@support_dir}/tmp")
   FileUtils.cp_r("#{@support_dir}/collection", "#{@support_dir}/tmp")
+
+  "#{@support_dir}/tmp/collection"
 end
