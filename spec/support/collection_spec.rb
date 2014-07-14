@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-require 'emojidex/collection'
-
 describe Emojidex::Collection do
   let(:collection) do
     Emojidex::Collection.new

@@ -1,8 +1,6 @@
-require 'emojidex/collection'
-
 module Emojidex
   # Manages a collection of emoji. + conversion
-  class Collection
+  Collection.class_eval do
     def rasterize(override = {})
       converter = Emojidex::Converter.new(override)
       converter.rasterize(@emoji.values, @source_path)

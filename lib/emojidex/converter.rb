@@ -1,8 +1,4 @@
-# require 'emojidex/converters'
-# require 'emojidex/collection'
 require 'phantom_svg'
-require_relative 'converters'
-require_relative 'collection'
 
 module Emojidex
   # Converter utility for emojidex
