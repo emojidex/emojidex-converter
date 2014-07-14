@@ -1,4 +1,5 @@
 require 'phantom_svg'
+require_relative 'preprocessor'
 
 module Emojidex
   # Converter utility for emojidex
@@ -32,7 +33,7 @@ module Emojidex
     end
 
     def preprocess(source_dir)
-      preprocessor = Emojidex::Converters::Preprocessor.new
+      preprocessor = Emojidex::Preprocessor.new
       preprocessor.compile_svg_animations(source_dir)
     end
   end

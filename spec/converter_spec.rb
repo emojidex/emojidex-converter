@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Emojidex::Converter do
   let(:converter) do
-    @destination = './tmp/out'
+    @destination = File.expand_path('../support/tmp/out', __FILE__)
     FileUtils.remove_entry_secure(@destination, true)
     Emojidex::Converter.new(destination: @destination)
   end

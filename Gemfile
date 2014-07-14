@@ -9,8 +9,7 @@ group :development do
   gem 'guard-rspec'
   gem 'rubocop'
   gem 'guard-rubocop'
-  gem 'emojidex', github: 'emojidex/emojidex'
-  gem 'phantom_svg', github: 'Genshin/phantom_svg'
+  #gem 'emojidex', github: 'emojidex/emojidex'
 end
 
 group :test do

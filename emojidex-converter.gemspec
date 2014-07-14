@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'rapngasm'
   s.add_dependency 'nokogiri'
   s.add_dependency 'cairo'
-  # s.add_dependency 'gdk3'
   s.add_dependency 'emojidex'
   s.add_dependency 'phantom_svg'
 end

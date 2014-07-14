@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Emojidex::Collection do
   let(:collection) do
-    Emojidex::Collection.new
+    Emojidex::Collection.new.load_local_collection(setup_working_collection)
   end
 
   describe '.new' do
@@ -20,7 +20,6 @@ describe Emojidex::Collection do
       expect(collection.methods).to include(:rasterize)
     end
   end
-
 
   describe '.rasterize' do
     it 'converts collection SVGs to PNG' do
