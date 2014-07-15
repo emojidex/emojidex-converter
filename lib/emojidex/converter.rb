@@ -9,10 +9,10 @@ module Emojidex
         px16: 16, px32: 32, px64: 64, px128: 128, px256: 256 }
     end
 
-    attr_accessor :sizes, :formats, :location
+    attr_accessor :sizes, :destination
     def initialize(override = {})
       @sizes = override[:sizes] || Converter.default_sizes
-      @path = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
+      @destination = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
     end
 
     def rasterize(emoji, source_dir)
@@ -20,7 +20,7 @@ module Emojidex
         phantom_svg = Phantom::SVG::Base.new("#{source_dir}/#{moji.code}.svg")
         @sizes.each do |key, val|
           # Create out directory.
-          out_dir = "#{@path}/#{key}"
+          out_dir = "#{@destination}/#{key}"
           FileUtils.mkdir_p(out_dir)
 
           # Set size.
@@ -32,9 +32,13 @@ module Emojidex
       end
     end
 
-    def preprocess(source_dir)
+    def rasterize_collection(collection)
+      rasterize(collection.emoji.values, collection.source_path)
+    end
+
+    def preprocess(path)
       preprocessor = Emojidex::Preprocessor.new
-      preprocessor.compile_svg_animations(source_dir)
+      preprocessor.compile_svg_animations(path)
     end
   end
 end
