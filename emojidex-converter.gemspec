@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'emojidex-converter'
-  s.version       = '0.0.1'
+  s.version       = '0.0.2'
   s.license       = 'Equivilent to emojidex-toolkit'
   s.summary       = 'Image conversion modules for emojidex'
   s.description   = 'Adds the convert method to Emojidex::Collection and Emojidex::Emoji, which\
