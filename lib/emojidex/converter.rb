@@ -34,6 +34,7 @@ module Emojidex
 
     def rasterize_collection(collection)
       rasterize(collection.emoji.values, collection.source_path)
+      collection.cache_index @destination
     end
 
     def preprocess(path)

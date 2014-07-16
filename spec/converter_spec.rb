@@ -61,11 +61,7 @@ describe Emojidex::Converter do
       converter.rasterize_collection(collection)
 
       expect(File.exist?("#{@destination}/ldpi/kiss.png")).to be_truthy
-    end
-  end
-
-  describe '.write_index' do
-    it 'writes an emojidex index (emoji.joson) at the destination' do
+      expect(File.exist?("#{@destination}/emoji.json")).to be_truthy
     end
   end
 end
