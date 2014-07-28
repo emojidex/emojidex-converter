@@ -9,7 +9,6 @@ group :development do
   gem 'guard-rspec'
   gem 'rubocop'
   gem 'guard-rubocop'
-  #gem 'emojidex', github: 'emojidex/emojidex'
 end
 
 group :test do
