@@ -13,6 +13,7 @@ module Emojidex
     def initialize(override = {})
       @sizes = override[:sizes] || Converter.default_sizes
       @destination = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
+      @noisy = override[:noisy] || :false
     end
 
     def rasterize(emoji, source_dir)
@@ -27,6 +28,7 @@ module Emojidex
           phantom_svg.width = phantom_svg.height = val.to_i
 
           # Output png.
+          puts "Converting: #{out_dir}/#{moji.code}.png"
           phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
         end
       end
