@@ -28,7 +28,7 @@ module Emojidex
           phantom_svg.width = phantom_svg.height = val.to_i
 
           # Output png.
-          puts "Converting: #{out_dir}/#{moji.code}.png"
+          puts "Converting: #{out_dir}/#{moji.code}.png" if @noisy
           phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
         end
       end
