@@ -30,7 +30,10 @@ module Emojidex
           # Output png.
           puts "Converting: #{out_dir}/#{moji.code}.png" if @noisy
           phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
+          GC.start
         end
+        phantom_svg.reset
+        GC.start
       end
     end
 
