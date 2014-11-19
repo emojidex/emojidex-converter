@@ -1,4 +1,5 @@
 require 'emojidex_converter'
+require 'emojidex'
 
 def setup_working_collection
   @support_dir = File.expand_path('../support', __FILE__)
