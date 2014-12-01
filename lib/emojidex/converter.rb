@@ -14,20 +14,21 @@ module Emojidex
     end
 
     def rasterize(emoji, source_dir)
+      _create_output_paths
       emoji.each do |moji|
         phantom_svg = Phantom::SVG::Base.new("#{source_dir}/#{moji.code}.svg")
+        render_threads = []
         @sizes.each do |key, val|
-          # Create out directory.
           out_dir = "#{@destination}/#{key}"
-          FileUtils.mkdir_p(out_dir)
-
           # Set size.
           phantom_svg.width = phantom_svg.height = val.to_i
-
-          # Output png.
-          puts "Converting: #{out_dir}/#{moji.code}.png" if @noisy
-          phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
+          # Render PNGs
+          render_threads << Thread.new do
+            puts "Converting: #{out_dir}/#{moji.code}.png" if @noisy
+            phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
+          end
         end
+        render_threads.each {|th| th.join }
         phantom_svg.reset
         GC.start
       end
@@ -41,6 +42,15 @@ module Emojidex
     def preprocess(path)
       preprocessor = Emojidex::Preprocessor.new
       preprocessor.compile_svg_animations(path)
+    end
+
+    private
+
+    def _create_output_paths
+      @sizes.each do |key, val|
+        out_dir = "#{@destination}/#{key}"
+        FileUtils.mkdir_p(out_dir)
+      end
     end
   end
 end
