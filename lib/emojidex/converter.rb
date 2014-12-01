@@ -5,7 +5,7 @@ require_relative 'preprocessor'
 module Emojidex
   # Converter utility for emojidex
   class Converter
-    attr_accessor :sizes, :destination
+    attr_accessor :sizes, :destination, :last_run_time
 
     def initialize(override = {})
       @sizes = override[:sizes] || Emojidex::Defaults.sizes
@@ -15,23 +15,30 @@ module Emojidex
 
     def rasterize(emoji, source_dir)
       _create_output_paths
+
+      start_time = Time.now
       emoji.each do |moji|
-        phantom_svg = Phantom::SVG::Base.new("#{source_dir}/#{moji.code}.svg")
         render_threads = []
         @sizes.each do |key, val|
-          out_dir = "#{@destination}/#{key}"
-          # Set size.
-          phantom_svg.width = phantom_svg.height = val.to_i
-          # Render PNGs
           render_threads << Thread.new do
+            out_dir = "#{@destination}/#{key}"
+            phantom_svg = Phantom::SVG::Base.new("#{source_dir}/#{moji.code}.svg")
+            # Set size.
+            phantom_svg.width = phantom_svg.height = val.to_i
+            # Render PNGs
             puts "Converting: #{out_dir}/#{moji.code}.png" if @noisy
             phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
+            phantom_svg.reset
+            phantom_svg = nil
           end
         end
         render_threads.each {|th| th.join }
-        phantom_svg.reset
         GC.start
       end
+
+      run_time = Time.now - start_time
+      puts "Total Converstion Time: #{run_time}" if @noisy
+      @last_run_time = run_time
     end
 
     def rasterize_collection(collection)
