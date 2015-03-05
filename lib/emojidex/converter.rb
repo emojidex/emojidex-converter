@@ -10,7 +10,7 @@ module Emojidex
     def initialize(override = {})
       @sizes = override[:sizes] || Emojidex::Defaults.sizes
       @destination = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
-      @noisy = override[:noisy] || :false
+      @noisy = override[:noisy] || false
     end
 
     def rasterize(emoji, source_dir)
