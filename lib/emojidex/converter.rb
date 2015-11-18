@@ -8,7 +8,7 @@ module Emojidex
     attr_accessor :sizes, :destination, :last_run_time
 
     def initialize(override = {})
-      @sizes = override[:sizes] || Emojidex::Defaults.sizes
+      @sizes = override[:sizes] || Emojidex::Data::Defaults.sizes
       @destination = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
       @noisy = override[:noisy] || false
     end
@@ -32,7 +32,7 @@ module Emojidex
             phantom_svg = nil
           end
         end
-        render_threads.each {|th| th.join }
+        render_threads.each { |th| th.join }
         GC.start
       end
 

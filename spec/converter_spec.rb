@@ -16,7 +16,7 @@ describe Emojidex::Converter do
   describe '.sizes' do
     it 'is a hash of size codes and sizes in px' do
       expect(converter.sizes).to be_an_instance_of(Hash)
-      expect(converter.sizes.size).to eq(Emojidex::Defaults.sizes.size)
+      expect(converter.sizes.size).to eq(Emojidex::Data::Defaults.sizes.size)
     end
 
     it 'overrides sizes when passed in initialization' do
@@ -37,7 +37,8 @@ describe Emojidex::Converter do
     it 'converts base SVG from the source directory to PNG in the destination directory' do
       setup_working_collection
       converter.preprocess("#{@support_dir}/tmp/collection")
-      converter.rasterize([Emojidex::Emoji.new(code: 'kiss')], "#{@support_dir}/tmp/collection")
+      converter.rasterize([Emojidex::Data::Emoji.new(code: 'kiss')],
+                          "#{@support_dir}/tmp/collection")
 
       expect(File.exist?("#{@destination}/ldpi/kiss.png")).to be_truthy
       expect(File.exist?("#{@destination}/mdpi/kiss.png")).to be_truthy
@@ -56,7 +57,7 @@ describe Emojidex::Converter do
     it 'converts an emojidex collection' do
       setup_working_collection
       converter.preprocess("#{@support_dir}/tmp/collection")
-      collection = Emojidex::Collection.new
+      collection = Emojidex::Data::Collection.new
       collection.load_local_collection("#{@support_dir}/tmp/collection")
       converter.rasterize_collection(collection)
 
