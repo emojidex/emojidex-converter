@@ -1,11 +1,9 @@
 language: ruby
 
-sudo: false
-
 before_install:
-  - add-apt-repository ppa:zero-tsuki/ppa -y
-  - apt-get update -q
-  - apt-get install libapngasm swig
+  - sudo add-apt-repository ppa:zero-tsuki/ppa -y
+  - sudo apt-get update -q
+  - sudo apt-get install libapngasm swig
 
 rvm:
   - 2.0.0
