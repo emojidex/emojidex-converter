@@ -1,0 +1,19 @@
+language: ruby
+
+sudo: false
+
+before_install:
+  - sudo add-apt-repository ppa:zero-tsuki/ppa -y
+  - sudo apt-get update -q
+  - sudo apt-get install libapngasm swig
+
+rvm:
+  - 2.0.0
+  - 2.1
+  - 2.2.3
+  - ruby-head
+  - rbx
+  - jruby-head
+
+script:
+  - bundle exec rspec
