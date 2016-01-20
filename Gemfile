@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gemspec
 
-gem 'emojidex', github: 'emojidex/emojidex'
+gem 'emojidex', '~> 0.2.0'
 
 group :development do
   gem 'rb-inotify', require: false

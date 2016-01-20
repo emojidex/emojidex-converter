@@ -8,7 +8,7 @@ module Emojidex
     attr_accessor :sizes, :destination, :last_run_time
 
     def initialize(override = {})
-      @sizes = override[:sizes] || Emojidex::Data::Defaults.sizes
+      @sizes = override[:sizes] || Emojidex::Defaults.sizes
       @destination = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
       @noisy = override[:noisy] || false
     end

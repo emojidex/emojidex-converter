@@ -16,7 +16,7 @@ describe Emojidex::Converter do
   describe '.sizes' do
     it 'is a hash of size codes and sizes in px' do
       expect(converter.sizes).to be_an_instance_of(Hash)
-      expect(converter.sizes.size).to eq(Emojidex::Data::Defaults.sizes.size)
+      expect(converter.sizes.size).to eq(Emojidex::Defaults.sizes.size)
     end
 
     it 'overrides sizes when passed in initialization' do
