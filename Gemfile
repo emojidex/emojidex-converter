@@ -2,9 +2,6 @@ source 'http://rubygems.org'
 
 gemspec
 
-#gem 'emojidex', '~> 0.2.0'
-gem 'emojidex', path: '../emojidex'
-
 group :development do
   gem 'rb-inotify', require: false
   gem 'rb-fsevent', require: false
