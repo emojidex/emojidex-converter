@@ -28,41 +28,44 @@ describe Emojidex::Converter do
   describe '.preprocess' do
     it 'preprocesses folders with SVG frame and animation.json files into frame-animated SVGs' do
       setup_working_collection
-      converter.preprocess("#{@support_dir}/tmp/collection")
-      expect(File.exist?("#{@support_dir}/tmp/collection/heartbeat.svg")).to be true
+      converter.preprocess("#{@collection_out_path}")
+      expect(File.exist?("#{@collection_out_path}/heartbeat.svg")).to be true
     end
   end
 
   describe '.rasterize' do
     it 'converts base SVG from the source directory to PNG in the destination directory' do
       setup_working_collection
-      converter.preprocess("#{@support_dir}/tmp/collection")
+      converter.preprocess("#{@collection_out_path}")
       converter.rasterize([Emojidex::Data::Emoji.new(code: 'kiss')],
-                          "#{@support_dir}/tmp/collection")
+                          "#{@collection_out_path}")
 
-      expect(File.exist?("#{@destination}/ldpi/kiss.png")).to be_truthy
-      expect(File.exist?("#{@destination}/mdpi/kiss.png")).to be_truthy
-      expect(File.exist?("#{@destination}/hdpi/kiss.png")).to be_truthy
-      expect(File.exist?("#{@destination}/xhdpi/kiss.png")).to be_truthy
-      expect(File.exist?("#{@destination}/px8/kiss.png")).to be_truthy
-      expect(File.exist?("#{@destination}/px16/kiss.png")).to be_truthy
-      expect(File.exist?("#{@destination}/px32/kiss.png")).to be_truthy
-      expect(File.exist?("#{@destination}/px64/kiss.png")).to be_truthy
-      expect(File.exist?("#{@destination}/px128/kiss.png")).to be_truthy
-      expect(File.exist?("#{@destination}/px256/kiss.png")).to be_truthy
+      expect(File.exist?("#{@destination}/ldpi/kiss.png")).to be true
+      expect(File.exist?("#{@destination}/mdpi/kiss.png")).to be true
+      expect(File.exist?("#{@destination}/hdpi/kiss.png")).to be true
+      expect(File.exist?("#{@destination}/xhdpi/kiss.png")).to be true
+      expect(File.exist?("#{@destination}/px8/kiss.png")).to be true
+      expect(File.exist?("#{@destination}/px16/kiss.png")).to be true
+      expect(File.exist?("#{@destination}/px32/kiss.png")).to be true
+      expect(File.exist?("#{@destination}/px64/kiss.png")).to be true
+      expect(File.exist?("#{@destination}/px128/kiss.png")).to be true
+      expect(File.exist?("#{@destination}/px256/kiss.png")).to be true
     end
   end
 
   describe '.rasterize_collection' do
     it 'converts an emojidex collection' do
       setup_working_collection
-      converter.preprocess("#{@support_dir}/tmp/collection")
-      collection = Emojidex::Data::Collection.new
-      collection.load_local_collection("#{@support_dir}/tmp/collection")
-      converter.rasterize_collection(collection)
+      converter.preprocess(@collection_out_path)
+      collection = Emojidex::Data::Collection.new(local_load_path: @collection_out_path)
+      processed_collection = converter.rasterize_collection(collection)
 
       expect(File.exist?("#{@destination}/ldpi/kiss.png")).to be_truthy
       expect(File.exist?("#{@destination}/emoji.json")).to be_truthy
+
+      processed_collection.generate_checksums
+      puts "CHECKSUM IS #{collection.emoji.values.first.checksums[:png][:ldpi]}"
+      expect(processed_collection.emoji.values.first.checksums[:png][:ldpi]).to be_truthy
     end
   end
 end

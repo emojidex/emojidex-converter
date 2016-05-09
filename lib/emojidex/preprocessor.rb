@@ -7,13 +7,13 @@ module Emojidex
       Dir.entries(path).each do |file|
         current_path = "#{path}/#{file}"
         next unless File.ftype(current_path) == 'directory'
-        compile(current_path) unless file.start_with?('.')
+        _svg_compile(current_path) unless file.start_with?('.')
       end
     end
 
     private
 
-    def compile(source_dir)
+    def _svg_compile(source_dir)
       json_path = "#{source_dir}/animation.json"
 
       return unless File.exist?(json_path)

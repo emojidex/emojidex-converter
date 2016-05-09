@@ -1,6 +1,7 @@
 require 'emojidex_converter'
 require 'emojidex'
 
+
 def setup_working_collection
   @support_dir = File.expand_path('../support', __FILE__)
 
@@ -8,5 +9,6 @@ def setup_working_collection
   FileUtils.mkdir_p("#{@support_dir}/tmp")
   FileUtils.cp_r("#{@support_dir}/collection", "#{@support_dir}/tmp")
 
-  "#{@support_dir}/tmp/collection"
+  @collection_out_path = "#{@support_dir}/tmp/collection"
+  @collection_out_path
 end

@@ -18,6 +18,7 @@ module Emojidex
 
       start_time = Time.now
       emoji.each do |moji|
+        puts "Source: #{source_dir}/#{moji.code}.svg" if @noisy
         render_threads = []
         @sizes.each do |key, val|
           render_threads << Thread.new do
@@ -30,6 +31,7 @@ module Emojidex
             phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
             phantom_svg.reset
             phantom_svg = nil
+            moji.paths[:png][key] = "#{out_dir}/#{moji.code}.png" 
           end
         end
         render_threads.each { |th| th.join }
@@ -43,7 +45,21 @@ module Emojidex
 
     def rasterize_collection(collection)
       rasterize(collection.emoji.values, collection.source_path)
-      collection.cache_index @destination
+      collection.generate_checksums
+      puts "Rasterization completed. Writing index." if @noisy
+      collection.write_index @destination
+      
+      puts "Re-opening collection at #{@destination} to generate meta data" if @noisy
+      converted_collection = Emojidex::Data::Collection.new(local_load_path: @destination)
+      converted_collection.raster_source_path = @destination
+      converted_collection.generate_paths
+
+      puts "Generating checksums..." if @noisy
+      converted_collection.generate_checksums
+
+      puts "Checksums generated. Writing index to emoji.json..." if @noisy
+      converted_collection.write_index @destination
+      converted_collection
     end
 
     def preprocess(path)
@@ -54,8 +70,11 @@ module Emojidex
     private
 
     def _create_output_paths
-      @sizes.each do |key, val|
+      @sizes.each do |key, _val|
         out_dir = "#{@destination}/#{key}"
+        puts "*Clearning #{@destination}/#{key}" if @noisy
+        FileUtils.rm_rf(out_dir)
+        puts "*Creating #{@destination}/#{key}" if @noisy
         FileUtils.mkdir_p(out_dir)
       end
     end

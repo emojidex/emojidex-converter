@@ -3,6 +3,12 @@ Emojidex Converter
 ==================
 A set of tools for converting emoji arrays to and from vectors [SVG] and rasters [PNG].
 
+This tool is primarily for internal use. You can find converted assets here:
+* Vectors: [emojidex-vectors](https://github.com/emojidex/emojidex-vectors)  
+* Rasters: [emojidex-rasters](https://github.com/emojidex/emojidex-rasters)
+  
+or on-line from the asset repository or CDN, [see documentation here](http://developer.emojidex.com/#assets)
+
 Requirements
 ------------
 Uses Phantom SVG, which in turn uses rapngasm.  
@@ -14,10 +20,11 @@ Usage
 The default destination will be your local emojidex cache (set with environment variable $EMOJI_CACHE, defaults to $HOME/.emojidex/cache) or the current directory if $EMOJI_CACHE is not set.  
 - You can specify the destination manually with an options hash key of :destination.  
 - You can sepcify your own sizes using a :sizes hash. The keys to the hash become the directory names.
+
 ```ruby
 converter = Emojidex::Converter.new(destination: "/output/destination/file/path", sizes: {super_huge: 2000, px12: 12})
-
-# sizes and output destination can be changed after initialization as well
+  
+# Sizes and output destination can be changed after initialization:  
 converter.destination = '/new/destination'
 converter.sizes = {superTiny: 3, '720p': 720}
 ```
@@ -45,5 +52,9 @@ Contributing
 Fork, edit, commit, push, pull request!  
 emojidex-converter is a very primitivate, fairly single-purpose tool. If you can think of any features that could extend its functionality we'd love to see it!
 
-----
-exmojidex-toolkit©2014 emojidex™/Genshin Souzou K.K. [Phantom Creation Inc.]
+License
+=======
+emojidex and emojidex tools are licensed under the 
+[emojidex Open License](https://www.emojidex.com/emojidex/emojidex_open_license).
+
+©2013 the emojidex project / Genshin Souzou K.K. [Phantom Creation Inc.]
