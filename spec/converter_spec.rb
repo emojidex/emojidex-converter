@@ -64,7 +64,6 @@ describe Emojidex::Converter do
       expect(File.exist?("#{@destination}/emoji.json")).to be_truthy
 
       processed_collection.generate_checksums
-      puts "CHECKSUM IS #{collection.emoji.values.first.checksums[:png][:ldpi]}"
       expect(processed_collection.emoji.values.first.checksums[:png][:ldpi]).to be_truthy
     end
   end
