@@ -2,6 +2,9 @@ require 'emojidex'
 require 'phantom_svg'
 require_relative 'preprocessor'
 
+# WARNING: The following code works, but it's basically just thrown together cowboy code.
+# This code may be cleaned in the future... maybe...
+
 module Emojidex
   # Converter utility for emojidex
   class Converter
@@ -11,36 +14,82 @@ module Emojidex
       @sizes = override[:sizes] || Emojidex::Defaults.sizes
       @destination = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
       @noisy = override[:noisy] || false
+      @max_threads = override[:max_threads] || @sizes.length
+      puts "Converting to #{@sizes.length} sizes with #{@max_threads}, outputting to #{@destination}." if @noisy
     end
 
     def rasterize(emoji, source_dir)
       _create_output_paths
 
       start_time = Time.now
-      emoji.each do |moji|
-        puts "Source: #{source_dir}/#{moji.code}.svg" if @noisy
-        render_threads = []
-        @sizes.each do |key, val|
-          render_threads << Thread.new do
-            out_dir = "#{@destination}/#{key}"
-            phantom_svg = Phantom::SVG::Base.new("#{source_dir}/#{moji.code}.svg")
-            # Set size.
-            phantom_svg.width = phantom_svg.height = val.to_i
-            # Render PNGs
-            puts "Converting: #{out_dir}/#{moji.code}.png" if @noisy
-            phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
-            phantom_svg.reset
-            phantom_svg = nil
-            moji.paths[:png][key] = "#{out_dir}/#{moji.code}.png" 
+      @queue = []
+      @processed_count = 0
+      @emoji_in_processing = []
+      @source_dir = source_dir
+      info_print = Thread.new do
+        if @noisy
+          puts "Processing..."
+          full_total = emoji.length * @sizes.length
+          while @processed_count < full_total
+            print "\r[#{@processed_count} / #{full_total}](" +
+              "#{((@processed_count.to_f / (full_total).to_f) * 100.0).to_i}%)" +
+              " ⚙ \"#{@emoji_in_processing.first}\"... TC:{#{@emoji_in_processing.length}}" +
+              "⌚ #{(Time.now - start_time).to_i}s\033[K"
+            sleep 3
           end
         end
-        render_threads.each { |th| th.join }
-        GC.start
+      end
+      emoji.each do |moji|
+        @sizes.each do |key, val|
+          @queue << {moji: moji, key: key, val: val}
+        end
       end
 
+      process_queue
+
+      info_print.join
       run_time = Time.now - start_time
       puts "Total Converstion Time: #{run_time}" if @noisy
       @last_run_time = run_time
+    end
+
+    def process_queue
+      processing_threads = []
+      queue_lock = Mutex.new
+      @max_threads.times do
+        processing_threads << Thread.new do
+          while (@queue.length > 0)
+            item = nil
+            queue_lock.synchronize do
+              item = @queue.pop if @queue.length > 0
+            end
+            process_item(item) if item != nil
+          end
+        end
+      end
+
+      processing_threads.each { |th| th.join }
+      GC.start
+    end
+
+    def process_item(item)
+      moji = item[:moji]  
+      key = item[:key]
+      val = item[:val]
+      processing_id = "#{moji.code}@#{key}"
+      @emoji_in_processing << processing_id
+      out_dir = "#{@destination}/#{key}"
+      phantom_svg = Phantom::SVG::Base.new("#{@source_dir}/#{moji.code}.svg")
+      # Set size.
+      phantom_svg.width = phantom_svg.height = val.to_i
+      # Render PNGs
+      #puts "Converting: #{out_dir}/#{moji.code}.png" if @noisy
+      phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
+      phantom_svg.reset
+      phantom_svg = nil
+      moji.paths[:png][key] = "#{out_dir}/#{moji.code}.png" 
+      @emoji_in_processing.delete(processing_id)
+      @processed_count += 1
     end
 
     def rasterize_collection(collection)
@@ -70,13 +119,14 @@ module Emojidex
     private
 
     def _create_output_paths
+      print "⚙ Clearing output paths[" if @noisy
       @sizes.each do |key, _val|
         out_dir = "#{@destination}/#{key}"
-        puts "*Clearning #{@destination}/#{key}" if @noisy
+        print "*" if @noisy
         FileUtils.rm_rf(out_dir)
-        puts "*Creating #{@destination}/#{key}" if @noisy
         FileUtils.mkdir_p(out_dir)
       end
+      print "] Done.\n" if @noisy
     end
   end
 end
