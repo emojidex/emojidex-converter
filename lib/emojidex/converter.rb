@@ -41,7 +41,7 @@ module Emojidex
       end
       emoji.each do |moji|
         @sizes.each do |key, val|
-          @queue << {moji: moji, key: key, val: val}
+          @queue << {moji: moji, size_code: key, size: val}
         end
       end
 
@@ -72,22 +72,37 @@ module Emojidex
       GC.start
     end
 
+    def process_components(moji, size_code, size, out_dir)
+      moji.combinations.each do |combo|
+        puts "combo #{combo}"
+        base = combo[:base]
+        Dir.mkdir("#{out_dir}/#{base}") unless Dir.exist? "#{out_dir}/#{base}"
+        Dir.mkdir("#{out_dir}/#{base}/0") unless Dir.exist? "#{out_dir}/#{base}/0"
+        phantom_svg = Phantom::SVG::Base.new("#{@source_dir}/#{base}/0/#{moji.code}.svg")
+        phantom_svg.width = phantom_svg.height = size.to_i
+        phantom_svg.save_apng("#{out_dir}/#{base}/0/#{moji.code}.png")
+        phantom_svg.reset
+        phantom_svg = nil
+      end
+    end
+
     def process_item(item)
       moji = item[:moji]  
-      key = item[:key]
-      val = item[:val]
-      processing_id = "#{moji.code}@#{key}"
+      size_code = item[:size_code]
+      size = item[:size]
+      processing_id = "#{moji.code}@#{size_code}"
       @emoji_in_processing << processing_id
-      out_dir = "#{@destination}/#{key}"
+      out_dir = "#{@destination}/#{size_code}"
       phantom_svg = Phantom::SVG::Base.new("#{@source_dir}/#{moji.code}.svg")
       # Set size.
-      phantom_svg.width = phantom_svg.height = val.to_i
+      phantom_svg.width = phantom_svg.height = size.to_i
       # Render PNGs
       #puts "Converting: #{out_dir}/#{moji.code}.png" if @noisy
       phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
       phantom_svg.reset
       phantom_svg = nil
-      moji.paths[:png][key] = "#{out_dir}/#{moji.code}.png" 
+      moji.paths[:png][size_code] = "#{out_dir}/#{moji.code}.png"
+      process_components(moji, size_code, size, out_dir)
       @emoji_in_processing.delete(processing_id)
       @processed_count += 1
     end
