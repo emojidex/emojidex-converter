@@ -74,15 +74,20 @@ module Emojidex
 
     def process_components(moji, size_code, size, out_dir)
       moji.combinations.each do |combo|
-        puts "combo #{combo}"
-        base = combo[:base]
-        Dir.mkdir("#{out_dir}/#{base}") unless Dir.exist? "#{out_dir}/#{base}"
-        Dir.mkdir("#{out_dir}/#{base}/0") unless Dir.exist? "#{out_dir}/#{base}/0"
-        phantom_svg = Phantom::SVG::Base.new("#{@source_dir}/#{base}/0/#{moji.code}.svg")
-        phantom_svg.width = phantom_svg.height = size.to_i
-        phantom_svg.save_apng("#{out_dir}/#{base}/0/#{moji.code}.png")
-        phantom_svg.reset
-        phantom_svg = nil
+        for i in 0..(combo.components.length - 1)
+          combo.components[i].each do |component|
+            Dir.mkdir("#{out_dir}/#{combo.base}") unless Dir.exist? "#{out_dir}/#{combo.base}"
+            Dir.mkdir("#{out_dir}/#{combo.base}/#{i}") unless Dir.exist? "#{out_dir}/#{combo.base}/#{i}"
+            
+            next if File.exist? "#{out_dir}/#{combo.base}/#{i}/#{component}.png"
+
+            phantom_svg = Phantom::SVG::Base.new("#{@source_dir}/#{combo.base}/#{i}/#{component}.svg")
+            phantom_svg.width = phantom_svg.height = size.to_i
+            phantom_svg.save_apng("#{out_dir}/#{combo.base}/#{i}/#{component}.png")
+            phantom_svg.reset
+            phantom_svg = nil
+          end
+        end
       end
     end
 
