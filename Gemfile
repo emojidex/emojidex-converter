@@ -11,8 +11,8 @@ group :development do
   gem 'guard-rubocop'
 
   gem 'emojidex', path: '../emojidex'
-  gem 'emojidex-vectors', path: '../emojidex-vectors', require: false
-  #gem 'emojidex-vectors', require: false
+  # gem 'emojidex-vectors', path: '../emojidex-vectors', require: false
+  gem 'emojidex-vectors', require: false
 end
 
 group :test do
