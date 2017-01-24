@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'emojidex-converter'
-  s.version       = '0.3.1'
+  s.version       = '0.3.2'
   s.license       = 'emojiOL'
   s.summary       = 'Image conversion modules for emojidex'
   s.description   = 'Adds the convert method to Emojidex::Collection and Emojidex::Emoji, which\
@@ -17,6 +17,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'rapngasm'
   s.add_dependency 'nokogiri'
   s.add_dependency 'cairo'
-  s.add_dependency 'emojidex', '~> 0.4'
+  s.add_dependency 'emojidex', '~> 0.4.1'
   s.add_dependency 'phantom_svg'
 end
