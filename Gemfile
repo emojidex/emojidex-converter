@@ -2,6 +2,8 @@ source 'http://rubygems.org'
 
 gemspec
 
+#gem 'emojidex', path: '../emojidex'
+
 group :development do
   gem 'rb-inotify', require: false
   gem 'rb-fsevent', require: false
@@ -10,8 +12,7 @@ group :development do
   gem 'rubocop'
   gem 'guard-rubocop'
 
-  # gem 'emojidex', path: '../emojidex'
-  gem 'emojidex', '~> 0.4.2'
+  #gem 'emojidex', '~> 0.4.2'
   #gem 'emojidex-vectors', path: '../emojidex-vectors', require: false
   gem 'emojidex-vectors', require: false
 end

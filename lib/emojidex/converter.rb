@@ -15,6 +15,7 @@ module Emojidex
       @destination = File.expand_path(override[:destination] || ENV['EMOJI_CACHE'] || './')
       @noisy = override[:noisy] || false
       @max_threads = override[:max_threads] || @sizes.length
+      @skip_components = override[:skip_components] || false
       puts "Converting to #{@sizes.length} sizes with #{@max_threads}, outputting to #{@destination}." if @noisy
     end
 
@@ -73,7 +74,7 @@ module Emojidex
     end
 
     def process_components(moji, size_code, size, out_dir)
-      moji.combinations.each do |combo|
+      moji.customizations.each do |combo|
         for i in 0..(combo.components.length - 1)
           combo.components[i].each do |component|
             Dir.mkdir("#{out_dir}/#{combo.base}") unless Dir.exist? "#{out_dir}/#{combo.base}"

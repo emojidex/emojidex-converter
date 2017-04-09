@@ -45,6 +45,7 @@
         "base": "family",
         "component_layer_order": [0, 1, 2, 3, 4],
         "components": [
+          ["woman"],
           [
             "woman", "woman(bk)", "woman(br)", "woman(p)", "woman(wh)", "woman(ye)",
             "man", "man(p)", "man(ye)", "man(bk)", "man(br)", "man(wh)",
