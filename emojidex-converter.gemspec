@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
                     allows you to convert an emoji collection or a single emoji to the specified\
                     image format.'
   s.authors       = ['Rei Kagetsuki', 'Rika Yoshida']
+  s.email         = 'info@emojidex.com'
   s.files         = Dir.glob('lib/**/*.rb') +
                     ['emojidex-converter.gemspec']
   s.homepage      = 'https://github.com/emojidex/emojidex-converter'
