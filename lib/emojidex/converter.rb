@@ -16,6 +16,7 @@ module Emojidex
       @noisy = override[:noisy] || false
       @max_threads = override[:max_threads] || @sizes.length
       @skip_components = override[:skip_components] || false
+      @retry_count = override[:retry_count] || 8
       puts "Converting to #{@sizes.length} sizes with #{@max_threads}, outputting to #{@destination}." if @noisy
     end
 
@@ -35,7 +36,7 @@ module Emojidex
             print "\r[#{@processed_count} / #{full_total}](" +
               "#{((@processed_count.to_f / (full_total).to_f) * 100.0).to_i}%)" +
               " ⚙ \"#{@emoji_in_processing.first}\"... TC:{#{@emoji_in_processing.length}}" +
-              "⌚ #{(Time.now - start_time).to_i}s\033[K"
+              "⌚ #{(Time.now - start_time).to_i}秒\033[K"
             sleep 3
           end
         end
@@ -104,7 +105,20 @@ module Emojidex
       phantom_svg.width = phantom_svg.height = size.to_i
       # Render PNGs
       #puts "Converting: #{out_dir}/#{moji.code}.png" if @noisy
-      phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
+
+      retry_counter = 0
+      begin
+        phantom_svg.save_apng("#{out_dir}/#{moji.code}.png")
+      rescue Rsvg::Error::Failed
+        puts "\nAn error occurred when converting #{moji.code} @ #{size_code}"
+        retry_counter += 1
+        if retry_counter <= @retry_count
+          puts "Retry ##{retry_counter}"
+          retry
+        else
+          puts "FATAL! Could not convert #{moji.code} in #{size_code}! Please check the source SVG"
+        end
+      end
       phantom_svg.reset
       phantom_svg = nil
       moji.paths[:png][size_code] = "#{out_dir}/#{moji.code}.png"
